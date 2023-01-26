@@ -37,11 +37,23 @@ async function submitFunc(event) {
 
   try {
     const post = await fetchCl.fetchCards();
-    if (post.total === 0) {
-      return Notiflix.Notify.info(
+    if (post.totalHits === 0) {
+       Notiflix.Notify.info(
         'Sorry, there are no images matching your search query. Please try again.',
       );
-    } else if (post.total > 40) {
+    }
+    if (+post.totalHits < 40) {
+      renderPic(post);
+      new SimpleLightbox('.gallery a', {
+        captionsData: 'alt',
+        captionDelay: 250,
+      });
+      smoothScroll();
+      Notiflix.Notify.info("We're sorry, but you've reached the end of search results."
+      );
+      return
+    }
+    else if (post.totalHits > 40) {
       // btnload.classList.remove('js-hidden');
       renderPic(post);
       new SimpleLightbox('.gallery a', {
